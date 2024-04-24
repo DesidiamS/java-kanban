@@ -18,25 +18,20 @@ public class TaskManager {
 
     public void createTask(Task task) {
         idSequence += 1;
-        Task newTask = new Task(task.getName(), task.getDescription(), idSequence, task.getStatus());
+        Task newTask = new Task(task.getName(), task.getDescription(), idSequence);
         tasks.put(idSequence, newTask);
-        System.out.println("Задача с id " + idSequence + " создана");
-        System.out.println(tasks.get(idSequence));
     }
 
-    public void createTask(Epic epic) {
+    public void createEpic(Epic epic) {
         idSequence += 1;
-        Epic newTask = new Epic(epic.getName(), epic.getDescription(), idSequence, TaskStatuses.NEW);
+        Epic newTask = new Epic(epic.getName(), epic.getDescription(), idSequence);
         epicTasks.put(idSequence, newTask);
-        System.out.println("Задача с id " + idSequence + " создана");
-        System.out.println(epicTasks.get(idSequence));
     }
 
-    public void createTask(Subtask subTask) {
+    public void createSubtask(Subtask subTask) {
         if (epicTasks.containsKey(subTask.getEpicId())) {
             idSequence += 1;
-            Subtask newTask = new Subtask(subTask.getName(), subTask.getDescription(), idSequence,
-                    TaskStatuses.NEW, subTask.getEpicId());
+            Subtask newTask = new Subtask(subTask.getName(), subTask.getDescription(), idSequence, subTask.getEpicId());
             subTasks.put(idSequence, newTask);
         }
     }
@@ -47,7 +42,7 @@ public class TaskManager {
         }
     }
 
-    public void updateTask(Epic epic) {
+    public void updateEpic(Epic epic) {
         if (epicTasks.containsKey(epic.getId())) {
             Epic existingTask = epicTasks.get(epic.getId());
             existingTask.setName(epic.getName());
@@ -55,7 +50,7 @@ public class TaskManager {
         }
     }
 
-    public void updateTask(Subtask subTask) {
+    public void updateSubtask(Subtask subTask) {
         if (subTasks.containsKey(subTask.getId())) {
             subTasks.put(subTask.getId(), subTask);
             checkEpicTaskStatus(subTask.getEpicId());
