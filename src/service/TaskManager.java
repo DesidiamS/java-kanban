@@ -33,6 +33,7 @@ public class TaskManager {
             idSequence += 1;
             Subtask newTask = new Subtask(subTask.getName(), subTask.getDescription(), idSequence, subTask.getEpicId());
             subTasks.put(idSequence, newTask);
+            epicTasks.get(subTask.getEpicId()).getSubtasks().put(newTask.getId(), newTask);
         }
     }
 
@@ -53,6 +54,7 @@ public class TaskManager {
     public void updateSubtask(Subtask subTask) {
         if (subTasks.containsKey(subTask.getId())) {
             subTasks.put(subTask.getId(), subTask);
+            epicTasks.get(subTask.getEpicId()).setSubtasks(subTasks);
             checkEpicTaskStatus(subTask.getEpicId());
         }
     }
@@ -86,6 +88,7 @@ public class TaskManager {
         // Если задачи-родителя не останется - все её подзадачи нужно удалить
         if (!getSubTasksByEpicId(id).isEmpty()) {
             deleteSubTaskByEpicId(id);
+            epicTasks.get(id).getSubtasks().clear();
         }
     }
 
@@ -127,14 +130,8 @@ public class TaskManager {
         return subTasksList;
     }
 
-    public ArrayList<Subtask> getSubTasksByEpicId(int epicTaskId) {
-        ArrayList<Subtask> subTasksList = new ArrayList<>();
-        for (Map.Entry<Integer, Subtask> map : subTasks.entrySet()) {
-            if (map.getValue().getEpicId() == epicTaskId) {
-                subTasksList.add(map.getValue());
-            }
-        }
-        return subTasksList;
+    public HashMap<Integer, Subtask> getSubTasksByEpicId(int epicTaskId) {
+        return epicTasks.get(epicTaskId).getSubtasks();
     }
 
     public Task getTaskById(int id) {
@@ -153,7 +150,7 @@ public class TaskManager {
         if (epicTasks.containsKey(epicTaskId)) {
             boolean isHasNew = false;
             boolean isHasInProgress = false;
-            for (Subtask subTask : getSubTasksByEpicId(epicTaskId)) {
+            for (Subtask subTask : getSubTasksByEpicId(epicTaskId).values()) {
                 if (subTask.getStatus().equals(TaskStatuses.NEW)) {
                     isHasNew = true;
                 }
@@ -167,6 +164,9 @@ public class TaskManager {
                     } else {
                         epicTasks.get(epicTaskId).setStatus(TaskStatuses.IN_PROGRESS);
                     }
+                }
+                if (epicTasks.get(epicTaskId).getStatus().equals(TaskStatuses.DONE) && (isHasInProgress || isHasNew)) {
+                    epicTasks.get(epicTaskId).setStatus(TaskStatuses.IN_PROGRESS);
                 }
             }
         }
