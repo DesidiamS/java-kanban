@@ -14,13 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static service.Managers.getDefault;
 
 public class TaskManagerTest {
     TaskManager manager;
 
     @BeforeAll
     static void isTaskManagerInitiated() {
-        assertNotNull(new Managers().getDefault());
+        assertNotNull(getDefault());
     }
 
     @BeforeAll
@@ -30,7 +31,7 @@ public class TaskManagerTest {
 
     @BeforeEach
     void createTaskManager() {
-        manager = new Managers().getDefault();
+        manager = getDefault();
     }
 
     @Test
