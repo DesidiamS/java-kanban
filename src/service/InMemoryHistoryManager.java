@@ -23,11 +23,13 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        linkLast(task);
-        if (taskHistory.containsKey(task.getId())) {
-            taskHistory.remove(task.getId());
+        if (task != null) {
+            linkLast(task);
+            if (taskHistory.containsKey(task.getId())) {
+                taskHistory.remove(task.getId());
+            }
+            taskHistory.put(task.getId(), new Node<>(task, first, last));
         }
-        taskHistory.put(task.getId(), new Node<>(task, first, last));
     }
 
     void linkLast(Task task) {
