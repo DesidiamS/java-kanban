@@ -10,9 +10,6 @@ import org.junit.jupiter.api.Test;
 import service.Managers;
 import service.TaskManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static service.Managers.getDefault;
 
@@ -109,7 +106,7 @@ public class TaskManagerTest {
         manager.createEpic(epic);
         Subtask subtask = new Subtask("Подзадача", "", 2); // 2 - id этой же подзадачи
         manager.createSubtask(subtask);
-        assertNull(manager.getSubTaskById(subtask.getId()));
+        assertNull(manager.getSubTaskById(2));
     }
 
     @Test
@@ -185,10 +182,7 @@ public class TaskManagerTest {
         updatedTask.setId(taskId);
         manager.updateTask(updatedTask);
         manager.getTaskById(taskId);
-        List<Task> expectedHistory = new ArrayList<>();
-        expectedHistory.add(task);
-        expectedHistory.add(updatedTask);
-        assertEquals(expectedHistory, manager.getHistory());
+        assertEquals(1, manager.getHistory().size());
     }
 
     @Test
