@@ -23,12 +23,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             String line;
             FileBackedTaskManager manager = new FileBackedTaskManager(new InMemoryHistoryManager(), file.getPath());
             while ((line = br.readLine()) != null) {
-                if (line.contains("TASK")) {
-                    manager.createTask(taskFromString(line));
-                } else if (line.contains("EPIC")) {
-                    manager.createEpic((Epic) taskFromString(line));
-                } else if (line.contains("SUBTASK")) {
-                    manager.createSubtask((Subtask) taskFromString(line));
+                switch (line) {
+                    case "TASK" -> manager.createTask(taskFromString(line));
+                    case "EPIC" -> manager.createEpic((Epic) taskFromString(line));
+                    case "SUBTASK" -> manager.createSubtask((Subtask) taskFromString(line));
                 }
             }
             return manager;
@@ -107,6 +105,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void createTask(Task task) {
+        if (task == null) {
+            return;
+        }
         super.createTask(task);
         try {
             save();
@@ -116,6 +117,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void createEpic(Epic epic) {
+        if (epic == null) {
+            return;
+        }
         super.createEpic(epic);
         try {
             save();
@@ -125,6 +129,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void createSubtask(Subtask subTask) {
+        if (subTask == null) {
+            return;
+        }
         super.createSubtask(subTask);
         try {
             save();
@@ -134,6 +141,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void updateTask(Task task) {
+        if (task == null) {
+            return;
+        }
         super.updateTask(task);
         try {
             save();
@@ -143,6 +153,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
+        if (epic == null) {
+            return;
+        }
         super.updateEpic(epic);
         try {
             save();
@@ -152,6 +165,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
+        if (subtask == null) {
+            return;
+        }
         super.updateSubtask(subtask);
         try {
             save();
