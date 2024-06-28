@@ -1,5 +1,3 @@
-package test;
-
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -55,5 +53,11 @@ class HistoryManagerTest {
         historyManager.add(subtask);
         historyManager.remove(task.getId());
         assertEquals(2, historyManager.getHistory().size());
+    }
+
+    @Test
+    void isHistoryEmpty() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        assertTrue(historyManager.getHistory().isEmpty());
     }
 }

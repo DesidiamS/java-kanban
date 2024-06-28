@@ -108,7 +108,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (task == null) {
             return;
         }
-        super.createTask(task);
+        try {
+            super.createTask(task);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
@@ -132,7 +136,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (subTask == null) {
             return;
         }
-        super.createSubtask(subTask);
+        try {
+            super.createSubtask(subTask);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
@@ -144,7 +152,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (task == null) {
             return;
         }
-        super.updateTask(task);
+        try {
+            super.updateTask(task);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
@@ -168,7 +180,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (subtask == null) {
             return;
         }
-        super.updateSubtask(subtask);
+        try {
+            super.updateSubtask(subtask);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
