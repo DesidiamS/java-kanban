@@ -1,6 +1,6 @@
-import model.*;
+import model.Task;
+import model.TaskTimeException;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.InMemoryHistoryManager;
 import service.InMemoryTaskManager;
@@ -14,11 +14,6 @@ import static service.Managers.getDefault;
 
 public class InMemoryTaskManagerTest extends TaskManagersTest {
 
-    @Override
-    public InMemoryTaskManager getManager() {
-        return new InMemoryTaskManager(new InMemoryHistoryManager());
-    }
-
     @BeforeAll
     static void isTaskManagerInitiated() {
         assertNotNull(getDefault());
@@ -27,6 +22,11 @@ public class InMemoryTaskManagerTest extends TaskManagersTest {
     @BeforeAll
     static void isHistoryManagerInitiated() {
         assertNotNull(Managers.getDefaultHistory());
+    }
+
+    @Override
+    public InMemoryTaskManager getManager() {
+        return new InMemoryTaskManager(new InMemoryHistoryManager());
     }
 
     @Test

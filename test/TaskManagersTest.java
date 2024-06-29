@@ -6,14 +6,11 @@ import service.Managers;
 import service.TaskManager;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static service.Managers.getDefault;
 
 public abstract class TaskManagersTest<T extends TaskManager> {
 
     T manager;
-
-    abstract T getManager();
 
     @BeforeAll
     static void isTaskManagerInitiated() {
@@ -24,6 +21,8 @@ public abstract class TaskManagersTest<T extends TaskManager> {
     static void isHistoryManagerInitiated() {
         assertNotNull(Managers.getDefaultHistory());
     }
+
+    abstract T getManager();
 
     @BeforeEach
     void createTaskManager() {

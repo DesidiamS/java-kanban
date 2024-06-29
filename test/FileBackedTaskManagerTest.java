@@ -1,6 +1,5 @@
 import model.ManagerSaveException;
 import model.Task;
-import model.TaskTimeException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FileBackedTaskManagerTest extends TaskManagersTest {
 
@@ -39,11 +39,7 @@ public class FileBackedTaskManagerTest extends TaskManagersTest {
 
     @Test
     void isFileCreated() {
-        try {
-            manager.createTask(new Task("Тест", "Описание"));
-        } catch (TaskTimeException e) {
-            throw new RuntimeException(e);
-        }
+        fileManager.createTask(new Task("Тест", "Описание"));
         try {
             fileManager.save();
         } catch (ManagerSaveException e) {
@@ -53,11 +49,7 @@ public class FileBackedTaskManagerTest extends TaskManagersTest {
 
     @Test
     void isFileLoaded() {
-        try {
-            manager.createTask(new Task("Тест", "Описание"));
-        } catch (TaskTimeException e) {
-            throw new RuntimeException(e);
-        }
+        fileManager.createTask(new Task("Тест", "Описание"));
         try {
             fileManager.save();
         } catch (ManagerSaveException e) {
