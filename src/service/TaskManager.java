@@ -3,22 +3,23 @@ package service;
 import model.Epic;
 import model.Subtask;
 import model.Task;
+import model.TaskTimeException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    void createTask(Task task);
+    void createTask(Task task) throws TaskTimeException;
 
     void createEpic(Epic epic);
 
-    void createSubtask(Subtask subTask);
+    void createSubtask(Subtask subTask) throws TaskTimeException;
 
-    void updateTask(Task task);
+    void updateTask(Task task) throws TaskTimeException;
 
     void updateEpic(Epic epic);
 
-    void updateSubtask(Subtask subTask);
+    void updateSubtask(Subtask subTask) throws TaskTimeException;
 
     void deleteAllTasks();
 
@@ -51,4 +52,6 @@ public interface TaskManager {
     List<Task> getHistory();
 
     void checkEpicTaskStatus(int epicTaskId);
+
+    void checkTaskTimeOverlap(Task task) throws TaskTimeException;
 }
