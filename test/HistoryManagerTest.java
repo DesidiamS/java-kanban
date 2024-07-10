@@ -1,5 +1,3 @@
-package test;
-
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -8,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import service.HistoryManager;
 import service.InMemoryHistoryManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HistoryManagerTest {
 
@@ -55,5 +54,11 @@ class HistoryManagerTest {
         historyManager.add(subtask);
         historyManager.remove(task.getId());
         assertEquals(2, historyManager.getHistory().size());
+    }
+
+    @Test
+    void isHistoryEmpty() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        assertTrue(historyManager.getHistory().isEmpty());
     }
 }

@@ -70,7 +70,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() throws ManagerSaveException {
         try (Writer writer = new FileWriter(filePath, StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic \n"); // заголовки таблицы
+            writer.write("id,type,name,status,description,startTime,duration,endType,epic \n"); // заголовки таблицы
             List<Task> taskList = new ArrayList<>();
             taskList.addAll(tasks.values());
             taskList.addAll(epicTasks.values());
@@ -90,15 +90,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (Task.class.equals(task.getClass())) {
             taskType = TaskTypes.TASK.name();
             line = task.getId() + ", " + taskType + ", " + task.getName() + ", " + task.getStatus() + ", " +
-                    task.getDescription();
+                    task.getDescription() + ", " + (task.getStartTime() == null ? "" : task.getStartTime()) + ", " +
+                    (task.getDuration() == null ? "" : task.getDuration()) + ", " +
+                    (task.getEndTime() == null ? "" : task.getEndTime());
         } else if (Epic.class.equals(task.getClass())) {
             taskType = TaskTypes.EPIC.name();
             line = task.getId() + ", " + taskType + ", " + task.getName() + ", " + task.getStatus() + ", " +
-                    task.getDescription();
+                    task.getDescription() + ", " + (task.getStartTime() == null ? "" : task.getStartTime()) + ", " +
+                    (task.getDuration() == null ? "" : task.getDuration()) + ", " +
+                    (task.getEndTime() == null ? "" : task.getEndTime());
         } else if (Subtask.class.equals(task.getClass())) {
             taskType = TaskTypes.SUBTASK.name();
             line = task.getId() + ", " + taskType + ", " + task.getName() + ", " + task.getStatus() + ", " +
-                    task.getDescription() + ", " + ((Subtask) task).getEpicId();
+                    task.getDescription() + ", " + (task.getStartTime() == null ? "" : task.getStartTime()) + ", " +
+                    (task.getDuration() == null ? "" : task.getDuration()) + ", " +
+                    (task.getEndTime() == null ? "" : task.getEndTime()) + ((Subtask) task).getEpicId();
         }
         return line;
     }
@@ -108,7 +114,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (task == null) {
             return;
         }
-        super.createTask(task);
+        try {
+            super.createTask(task);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
@@ -132,7 +142,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (subTask == null) {
             return;
         }
-        super.createSubtask(subTask);
+        try {
+            super.createSubtask(subTask);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
@@ -144,7 +158,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (task == null) {
             return;
         }
-        super.updateTask(task);
+        try {
+            super.updateTask(task);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
@@ -168,7 +186,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (subtask == null) {
             return;
         }
-        super.updateSubtask(subtask);
+        try {
+            super.updateSubtask(subtask);
+        } catch (TaskTimeException ignored) {
+
+        }
         try {
             save();
         } catch (ManagerSaveException ignored) {
