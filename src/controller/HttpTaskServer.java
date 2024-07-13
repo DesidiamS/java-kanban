@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     private static HttpServer server;
     private final TaskManager taskManager;
+
     public HttpTaskServer(TaskManager taskManager) {
         this.taskManager = taskManager;
     }

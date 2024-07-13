@@ -2,32 +2,21 @@ package service;
 
 import model.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     Node<Task> first;
     Node<Task> last;
     Map<Integer, Node<Task>> taskHistory = new HashMap<>();
 
-    static class Node<T> {
-        T task;
-        Node<T> next;
-        Node<T> prev;
-
-        public Node(T task, Node<T> next, Node<T> prev) {
-            this.task = task;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(Task task) {
         if (task != null) {
             linkLast(task);
-            if (taskHistory.containsKey(task.getId())) {
-                taskHistory.remove(task.getId());
-            }
+            taskHistory.remove(task.getId());
             taskHistory.put(task.getId(), new Node<>(task, first, last));
         }
     }
@@ -74,5 +63,17 @@ public class InMemoryHistoryManager implements HistoryManager {
             taskHistoryList.add(taskHistory.get(key).task);
         }
         return taskHistoryList;
+    }
+
+    static class Node<T> {
+        T task;
+        Node<T> next;
+        Node<T> prev;
+
+        public Node(T task, Node<T> next, Node<T> prev) {
+            this.task = task;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }

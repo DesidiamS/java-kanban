@@ -19,13 +19,13 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubtaskHandlerTest {
+    private static final String URI_CONST = "http://127.0.0.1:8080/subtasks";
     TaskManager taskManager;
     HttpTaskServer httpTaskServer;
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
-    private static final String URI_CONST = "http://127.0.0.1:8080/subtasks";
 
     @BeforeEach
     public void start() {
