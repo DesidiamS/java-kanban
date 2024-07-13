@@ -7,6 +7,7 @@ import model.TaskTimeException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
     void createTask(Task task) throws TaskTimeException;
@@ -54,4 +55,6 @@ public interface TaskManager {
     void checkEpicTaskStatus(int epicTaskId);
 
     void checkTaskTimeOverlap(Task task) throws TaskTimeException;
+
+    TreeSet<Task> getPrioritizedTasks();
 }

@@ -55,7 +55,11 @@ public class InMemoryTaskManager implements TaskManager {
             int epicId = subTask.getEpicId();
             Epic epic = epicTasks.get(epicId);
             checkEpicTime(epicId);
-            epic.getSubtasksIdList().add(idSequence);
+            try {
+                epic.getSubtasksIdList().add(idSequence);
+            } catch (NullPointerException e) {
+                epic.setSubtasksIdList(new ArrayList<>(idSequence));
+            }
             prioritizedTasks.add(subTask);
         }
     }
@@ -142,7 +146,11 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTasks.remove(epicTasks.get(id));
         epicTasks.remove(id);
         // Если задачи-родителя не останется - все её подзадачи нужно удалить
-        deleteSubTaskByEpicId(id);
+        try {
+            deleteSubTaskByEpicId(id);
+        } catch (Exception ignored) {
+
+        }
     }
 
     @Override
@@ -249,33 +257,34 @@ public class InMemoryTaskManager implements TaskManager {
 
     public void checkEpicTime(Integer id) {
         Epic epic = epicTasks.get(id);
-        List<Subtask> subTasks = getSubTasksByEpicId(id);
-        if (!subTasks.isEmpty()) {
-            epic.setStartTime(
-                    subTasks.stream()
-                            .map(Task::getStartTime)
-                            .filter(Objects::nonNull)
-                            .min(LocalDateTime::compareTo)
-                            .orElse(null)
-            );
-            subTasks.stream()
-                    .filter(subtask -> subtask != null && subtask.getDuration() != null)
-                    .map(Subtask::getDuration)
-                    .reduce(Duration::plus)
-                    .ifPresent(epic::setDuration);
-            epic.setStartTime(
-                    subTasks.stream()
-                            .filter(subtask -> subtask != null && subtask.getStartTime() != null)
-                            .map(Subtask::getStartTime)
-                            .max(LocalDateTime::compareTo)
-                            .orElse(null)
-            );
-        } else { // На случай, если удалили последнюю подзадачу
-            epic.setStartTime(null);
-            epic.setEndTime(null);
-            epic.setDuration(null);
+        if (epic != null) {
+            List<Subtask> subTasks = getSubTasksByEpicId(id);
+            if (!subTasks.isEmpty()) {
+                epic.setStartTime(
+                        subTasks.stream()
+                                .map(Task::getStartTime)
+                                .filter(Objects::nonNull)
+                                .min(LocalDateTime::compareTo)
+                                .orElse(null)
+                );
+                subTasks.stream()
+                        .filter(subtask -> subtask != null && subtask.getDuration() != null)
+                        .map(Subtask::getDuration)
+                        .reduce(Duration::plus)
+                        .ifPresent(epic::setDuration);
+                epic.setStartTime(
+                        subTasks.stream()
+                                .filter(subtask -> subtask != null && subtask.getStartTime() != null)
+                                .map(Subtask::getStartTime)
+                                .max(LocalDateTime::compareTo)
+                                .orElse(null)
+                );
+            } else { // На случай, если удалили последнюю подзадачу
+                epic.setStartTime(null);
+                epic.setEndTime(null);
+                epic.setDuration(null);
+            }
         }
-
     }
 
     @Override
