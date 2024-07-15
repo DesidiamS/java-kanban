@@ -1,27 +1,13 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import model.Endpoints;
-import service.DurationAdapter;
-import service.LocalDateTimeAdapter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
-public abstract class BaseHttpHandler {
-
-    Gson gson;
-
-    public BaseHttpHandler() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
-    }
+public abstract class BaseHttpHandler implements HttpHandler {
 
     protected void sendText(HttpExchange h, String text) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
@@ -52,6 +38,11 @@ public abstract class BaseHttpHandler {
         h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         h.sendResponseHeaders(201, resp.length);
         h.getResponseBody().write(resp);
+        h.close();
+    }
+
+    protected void sendNotAllowed(HttpExchange h) throws IOException {
+        h.sendResponseHeaders(405, 0);
         h.close();
     }
 

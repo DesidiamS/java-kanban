@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.Endpoints;
@@ -13,9 +14,11 @@ import java.nio.charset.StandardCharsets;
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private final TaskManager taskManager;
+    private final Gson gson;
 
-    public TaskHandler(TaskManager taskManager) {
+    public TaskHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
+        this.gson = gson;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             case POST -> createTask(httpExchange);
             case PUT -> updateTask(httpExchange);
             case DELETE -> deleteTask(httpExchange);
+            case UNKNOWN -> sendNotAllowed(httpExchange);
         }
     }
 

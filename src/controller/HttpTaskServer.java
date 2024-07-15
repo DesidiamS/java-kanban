@@ -1,15 +1,22 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
+import service.DurationAdapter;
+import service.LocalDateTimeAdapter;
 import service.Managers;
 import service.TaskManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class HttpTaskServer {
     private static HttpServer server;
     private final TaskManager taskManager;
+    private static Gson gson;
 
     public HttpTaskServer(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -26,12 +33,20 @@ public class HttpTaskServer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        server.createContext("/tasks", new TaskHandler(taskManager));
-        server.createContext("/epics", new EpicHandler(taskManager));
-        server.createContext("/subtasks", new SubtaskHandler(taskManager));
-        server.createContext("/history", new HistoryHandler(taskManager));
-        server.createContext("/prioritized", new PrioritizedTasksHandler(taskManager));
+        setGson();
+        server.createContext("/tasks", new TaskHandler(taskManager, gson));
+        server.createContext("/epics", new EpicHandler(taskManager, gson));
+        server.createContext("/subtasks", new SubtaskHandler(taskManager, gson));
+        server.createContext("/history", new HistoryHandler(taskManager, gson));
+        server.createContext("/prioritized", new PrioritizedTasksHandler(taskManager, gson));
         server.start();
+    }
+
+    public static void setGson() {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
     }
 
     public void stopServer() {
